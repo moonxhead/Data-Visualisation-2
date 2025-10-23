@@ -2,23 +2,26 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": "container",
   "height": 420,
-  "data": {"url": "combined_fighter_dataset.csv"},
+  "data": { "url": "combined_fighter_dataset.csv" },
   "transform": [
     {
-      "calculate": "indexof(['Australia','United States','Brazil','Japan','Russia','Nigeria','Mexico'], datum.country) >= 0 ? (datum.country=='United States' ? 'USA' : datum.country) : 'Rest of World'",
+      "calculate": "toLower(datum.country)=='australia' ? 'Australia' : (toLower(datum.country)=='usa' || toLower(datum.country)=='united states' || toLower(datum.country)=='united states of america') ? 'USA' : (toLower(datum.country)=='brazil' ? 'Brazil' : (toLower(datum.country)=='japan' ? 'Japan' : (toLower(datum.country)=='russia' ? 'Russia' : (toLower(datum.country)=='nigeria' ? 'Nigeria' : (toLower(datum.country)=='mexico' ? 'Mexico' : 'Rest of World')))))",
       "as": "country_group"
     },
+    { "calculate": "toNumber(datum.wins)",   "as": "w" },
+    { "calculate": "toNumber(datum.losses)", "as": "l" },
+    { "calculate": "toNumber(datum.draws)",  "as": "d" },
     {
-      "calculate": "(datum.wins + datum.losses + datum.draws) > 0 ? datum.wins / (datum.wins + datum.losses + datum.draws) : null",
+      "calculate": "(datum.w + datum.l + datum.d) > 0 ? datum.w / (datum.w + datum.l + datum.d) : null",
       "as": "win_rate"
     },
-    {"filter": "datum.win_rate != null"},
+    { "filter": "datum.win_rate != null" },
     {
-      "aggregate": [{"op": "mean", "field": "win_rate", "as": "avg_win_rate"}],
+      "aggregate": [{ "op": "mean", "field": "win_rate", "as": "avg_win_rate" }],
       "groupby": ["country_group"]
     }
   ],
-  "mark": {"type": "bar", "cornerRadiusEnd": 3},
+  "mark": { "type": "bar", "cornerRadiusEnd": 3 },
   "encoding": {
     "x": {
       "field": "country_group",
@@ -30,13 +33,13 @@
       "field": "avg_win_rate",
       "type": "quantitative",
       "title": "Average Win Rate",
-      "axis": {"format": ".0%"},
-      "scale": {"domain": [0, 1]}
+      "axis": { "format": ".0%" },
+      "scale": { "domain": [0, 1] }
     },
-    "color": {"field": "country_group", "type": "nominal", "legend": null},
+    "color": { "field": "country_group", "type": "nominal", "legend": null },
     "tooltip": [
-      {"field": "country_group", "title": "Group"},
-      {"field": "avg_win_rate", "title": "Avg Win Rate", "format": ".1%"}
+      { "field": "country_group", "title": "Group" },
+      { "field": "avg_win_rate", "title": "Avg Win Rate", "format": ".1%" }
     ]
   }
 }
