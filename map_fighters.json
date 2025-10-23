@@ -4,7 +4,6 @@
   "width": 800,
   "height": 420,
   "projection": { "type": "equalEarth" },
-
   "layer": [
     {
       "data": {
@@ -48,4 +47,26 @@
               "format": { "type": "topojson", "feature": "countries" }
             },
             "key": "id",
-            "fields": ["type", "geomet]()
+            "fields": ["type", "geometry"]
+          },
+          "as": ["geo"]
+        },
+        { "filter": "isValid(datum.geo)" }
+      ],
+      "mark": { "type": "geoshape", "stroke": "white", "strokeWidth": 0.5 },
+      "encoding": {
+        "shape": { "field": "geo", "type": "geojson" },
+        "color": {
+          "field": "fighters",
+          "type": "quantitative",
+          "scale": { "scheme": "blues" },
+          "legend": { "title": "Number of Fighters" }
+        },
+        "tooltip": [
+          { "field": "country_norm", "title": "Country" },
+          { "field": "fighters", "title": "Fighters" }
+        ]
+      }
+    }
+  ]
+}
