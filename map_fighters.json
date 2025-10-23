@@ -1,61 +1,52 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": "Number of UFC Fighters by Country",
-  "width": "container",
-  "height": 460,
-  "projection": {"type": "equalEarth"},
-  "layer": [
+  "width": 800,
+  "height": 420,
+  "projection": { "type": "equalEarth" },
+
+  "data": {
+    "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
+    "format": { "type": "topojson", "feature": "ne_110m_admin_0_countries" }
+  },
+
+  "transform": [
     {
-      "data": {
-        "url": "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"
-      },
-      "mark": {"type": "geoshape", "fill": "#efefef", "stroke": "#ffffff", "strokeWidth": 0.5}
-    },
-    {
-      "data": {
-        "url": "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"
-      },
-      "transform": [
-        {
-          "calculate": "datum.properties.name == 'United States of America' ? 'United States' : datum.properties.name == 'Russian Federation' ? 'Russia' : datum.properties.name == 'Korea, Republic of' ? 'South Korea' : datum.properties.name == 'Czech Republic' ? 'Czechia' : datum.properties.name == 'Viet Nam' ? 'Vietnam' : datum.properties.name == 'Lao PDR' ? 'Laos' : datum.properties.name",
-          "as": "name_norm"
+      "lookup": "properties.NAME",
+      "from": {
+        "data": {
+          "url": "combined_fighter_dataset.csv",
+          "format": { "type": "csv" }
         },
-        {
-          "lookup": "name_norm",
-          "from": {
-            "data": {
-              "url": "combined_fighter_dataset.csv"
-            },
-            "transform": [
-              {
-                "calculate": "toLower(datum.country) == 'usa' ? 'United States' : toLower(datum.country) == 'united states' ? 'United States' : toLower(datum.country) == 'united states of america' ? 'United States' : datum.country in ['England','Scotland','Wales','Northern Ireland','UK'] ? 'United Kingdom' : datum.country",
-                "as": "country_norm"
-              },
-              {
-                "aggregate": [{"op": "count", "as": "fighters"}],
-                "groupby": ["country_norm"]
-              }
-            ],
-            "key": "country_norm",
-            "fields": ["fighters"]
+        "transform": [
+          {
+            "calculate": "toLower(datum.country) == 'usa' ? 'United States of America' : datum.country",
+            "as": "CountryKey"
           },
-          "as": ["fighters"]
-        }
-      ],
-      "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.5},
-      "encoding": {
-        "shape": {"field": "geometry", "type": "geojson"},
-        "color": {
-          "field": "fighters",
-          "type": "quantitative",
-          "title": "Fighters",
-          "scale": {"scheme": "blues"}
-        },
-        "tooltip": [
-          {"field": "name_norm", "title": "Country"},
-          {"field": "fighters", "title": "Fighters"}
-        ]
-      }
+          {
+            "aggregate": [{ "op": "count", "as": "fighters" }],
+            "groupby": ["CountryKey"]
+          }
+        ],
+        "key": "CountryKey",
+        "fields": ["fighters"]
+      },
+      "as": ["fighters"]
     }
-  ]
+  ],
+
+  "mark": { "type": "geoshape" },
+
+  "encoding": {
+    "color": {
+      "field": "fighters",
+      "type": "quantitative",
+      "title": "Fighters",
+      "scale": { "scheme": "blues" }
+    },
+    "tooltip": [
+      { "field": "properties.NAME", "title": "Country" },
+      { "field": "fighters", "title": "Fighters" }
+    ]
+  }
 }
