@@ -1,63 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>UFC Fighter Performance — Australia vs The World</title>
-<link rel="stylesheet" href="https://unpkg.com/purecss@2.2.0/build/pure-min.css" />
-<style>
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;margin:0;color:#111}
-  header{padding:32px 16px;text-align:center;border-bottom:1px solid #eee}
-  h1{margin:0 0 8px 0;font-size:28px}
-  .container{max-width:1100px;margin:0 auto;padding:24px 16px}
-  section{margin:32px 0;padding-bottom:24px;border-bottom:1px solid #f1f1f1}
-  .chart{width:100%;min-height:420px}
-  h2{margin:0 0 8px 0;font-size:22px}
-  p.note{margin:8px 0 0 0;color:#444}
-  footer{padding:24px 16px;color:#666;text-align:center}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UFC Fighter Performance — Australia vs The World</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <style>
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 30px auto;
+      max-width: 1200px;
+      line-height: 1.5;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 60px;
+    }
+
+    .chart {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+    }
+
+    .vis-container {
+      width: 900px;
+      max-width: 100%;
+    }
+
+    hr {
+      margin: 40px 0;
+    }
+  </style>
 </head>
+
 <body>
-<header>
   <h1>UFC Fighter Performance — Australia vs The World</h1>
-  <div>Focus countries: Australia, USA, Brazil, Japan, Russia, Nigeria, Mexico, and Rest of World</div>
-</header>
+  <p style="text-align: center;">
+    Focus countries: Australia, USA, Brazil, Japan, Russia, Nigeria, Mexico, and Rest of World
+  </p>
 
-<div class="container">
+  <h2>1) Fighters by Country (Map)</h2>
+  <div class="chart">
+    <div id="map" class="vis-container"></div>
+  </div>
 
-  <section>
-    <h2>1) Fighters by Country (Map)</h2>
-    <div id="map" class="chart"></div>
-    <p class="note">Text analysis</p>
-  </section>
+  <p>Text analysis</p>
+  <hr />
 
-  <section>
-    <h2>2) Average Win Rate by Country Group</h2>
-    <div id="barchart" class="chart"></div>
-    <p class="note">Text analysis</p>
-  </section>
+  <h2>2) Average Win Rate by Country Group</h2>
+  <div class="chart">
+    <div id="winrate" class="vis-container"></div>
+  </div>
 
-  <section>
-    <h2>3) Method of Victory Distribution</h2>
-    <div id="stacked" class="chart"></div>
-    <p class="note">Text analysis</p>
-  </section>
+  <p>Text analysis</p>
+  <hr />
 
-  <section>
-    <h2>4) Striking vs Takedowns</h2>
-    <div id="scatter" class="chart"></div>
-    <p class="note">Text analysis</p>
-  </section>
+  <h2>3) Distribution of Method of Victory</h2>
+  <div class="chart">
+    <div id="method" class="vis-container"></div>
+  </div>
 
-</div>
+  <p>Text analysis</p>
+  <hr />
 
-<footer>
-  <small>Data source: combined_fighter_dataset.csv • Built with Vega-Lite</small>
-</footer>
+  <h2>4) Strikes vs Takedowns per Fighter</h2>
+  <div class="chart">
+    <div id="scatter" class="vis-container"></div>
+  </div>
 
-<script src="main.js"></script>
+  <p>Text analysis</p>
+  <hr />
+
+  <script>
+    vegaEmbed("#map", "map_ufc_world_final.json", { actions: false });
+    vegaEmbed("#winrate", "bar_winrate.json", { actions: false });
+    vegaEmbed("#method", "stack_victory_method.json", { actions: false });
+    vegaEmbed("#scatter", "scatter_strikes_takedowns.json", { actions: false });
+  </script>
 </body>
 </html>
