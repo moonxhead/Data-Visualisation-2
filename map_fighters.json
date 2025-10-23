@@ -28,44 +28,44 @@
           }
         },
         {
-          "calculate": "datum.name == 'United States of America' ? 'United States' : datum.name == 'Russian Federation' ? 'Russia' : datum.name == 'Korea, Republic of' ? 'South Korea' : datum.name",
-          "as": "csv_key_main"
+          "calculate": "datum.name=='United States of America' ? 'United States' : datum.name=='Russian Federation' ? 'Russia' : datum.name=='Korea, Republic of' ? 'South Korea' : datum.name",
+          "as": "name_norm"
         },
         {
-          "lookup": "csv_key_main",
+          "lookup": "name_norm",
           "from": {
-            "data": {"url": "combined_fighter_dataset.csv"},
-            "key": "country",
-            "fields": ["country"]
+            "data": {
+              "url": "combined_fighter_dataset.csv"
+            },
+            "transform": [
+              {
+                "calculate": "datum.country=='USA' ? 'United States' : toLower(datum.country)=='united states' ? 'United States' : toLower(datum.country)=='united states of america' ? 'United States' : datum.country",
+                "as": "country_norm"
+              },
+              {
+                "aggregate": [{"op": "count", "as": "fighters"}],
+                "groupby": ["country_norm"]
+              }
+            ],
+            "key": "country_norm",
+            "fields": ["fighters"]
           },
-          "as": "m_main"
+          "as": ["fighters"]
+        }
+      ],
+      "mark": {"type": "geoshape"},
+      "encoding": {
+        "color": {
+          "field": "fighters",
+          "type": "quantitative",
+          "title": "Fighters",
+          "scale": {"scheme": "blues"}
         },
-        {
-          "calculate": "datum.name == 'United States of America' ? 'USA' : null",
-          "as": "csv_alias_usa1"
-        },
-        {
-          "lookup": "csv_alias_usa1",
-          "from": {
-            "data": {"url": "combined_fighter_dataset.csv"},
-            "key": "country",
-            "fields": ["country"]
-          },
-          "as": "m_usa1"
-        },
-        {
-          "calculate": "datum.name == 'United States of America' ? 'United states' : null",
-          "as": "csv_alias_usa2"
-        },
-        {
-          "lookup": "csv_alias_usa2",
-          "from": {
-            "data": {"url": "combined_fighter_dataset.csv"},
-            "key": "country",
-            "fields": ["country"]
-          },
-          "as": "m_usa2"
-        },
-        {
-          "calculate": "datum.name == 'United Kingdom' ? 'England' : null",
-          "as": "csv_alias_uk1
+        "tooltip": [
+          {"field": "name", "title": "Country"},
+          {"field": "fighters", "title": "Fighters"}
+        ]
+      }
+    }
+  ]
+}
