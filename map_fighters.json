@@ -1,69 +1,55 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "width": "container",
-  "height": 460,
-  "projection": {"type": "equalEarth"},
+  "title": "Number of UFC Fighters by Country",
+  "width": 800,
+  "height": 420,
+  "projection": { "type": "equalEarth" },
+
   "layer": [
     {
       "data": {
-        "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
-        "format": {"type": "topojson", "feature": "countries"}
+        "url": "https://raw.githubusercontent.com/trandungpham/FIT3179-VegaLite/refs/heads/main/js/ne_110m_admin_0_countries.topojson",
+        "format": { "type": "topojson", "feature": "ne_110m_admin_0_countries" }
       },
-      "mark": {"type": "geoshape", "fill": "#f0f0f0", "stroke": "#cccccc", "strokeWidth": 0.6}
+      "mark": { "type": "geoshape", "fill": "#efefef", "stroke": "white", "strokeWidth": 0.5 }
     },
     {
-      "data": {
-        "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
-        "format": {"type": "topojson", "feature": "countries"}
-      },
+      "data": { "url": "combined_fighter_dataset.csv" },
       "transform": [
         {
-          "lookup": "id",
-          "from": {
-            "data": {
-              "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m-country-names.tsv"
-            },
-            "key": "id",
-            "fields": ["name"]
-          }
+          "calculate": "datum.country=='USA' ? 'United States of America' : datum.country",
+          "as": "country_norm"
         },
         {
-          "calculate": "datum.name=='United States of America' ? 'United States' : datum.name=='Russian Federation' ? 'Russia' : datum.name=='Korea, Republic of' ? 'South Korea' : datum.name",
-          "as": "name_norm"
+          "aggregate": [{ "op": "count", "as": "fighters" }],
+          "groupby": ["country_norm"]
         },
         {
-          "lookup": "name_norm",
+          "lookup": "country_norm",
           "from": {
             "data": {
-              "url": "combined_fighter_dataset.csv"
+              "url": "https://raw.githubusercontent.com/trandungpham/FIT3179-VegaLite/refs/heads/main/js/ne_110m_admin_0_countries.topojson",
+              "format": { "type": "topojson", "feature": "ne_110m_admin_0_countries" }
             },
-            "transform": [
-              {
-                "calculate": "datum.country=='USA' ? 'United States' : toLower(datum.country)=='united states' ? 'United States' : toLower(datum.country)=='united states of america' ? 'United States' : datum.country",
-                "as": "country_norm"
-              },
-              {
-                "aggregate": [{"op": "count", "as": "fighters"}],
-                "groupby": ["country_norm"]
-              }
-            ],
-            "key": "country_norm",
-            "fields": ["fighters"]
+            "key": "properties.ADMIN",
+            "fields": ["geometry"]
           },
-          "as": ["fighters"]
-        }
+          "as": ["geometry"]
+        },
+        { "filter": "isValid(datum.geometry)" }
       ],
-      "mark": {"type": "geoshape"},
+      "mark": { "type": "geoshape", "stroke": "white", "strokeWidth": 0.5 },
       "encoding": {
+        "shape": { "field": "geometry", "type": "geojson" },
         "color": {
           "field": "fighters",
           "type": "quantitative",
-          "title": "Fighters",
-          "scale": {"scheme": "blues"}
+          "scale": { "scheme": "blues", "clamp": true, "nice": true },
+          "legend": { "title": "Number of Fighters" }
         },
         "tooltip": [
-          {"field": "name", "title": "Country"},
-          {"field": "fighters", "title": "Fighters"}
+          { "field": "country_norm", "title": "Country" },
+          { "field": "fighters", "title": "Fighters" }
         ]
       }
     }
