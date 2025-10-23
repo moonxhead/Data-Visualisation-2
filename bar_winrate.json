@@ -16,6 +16,10 @@
     {
       "aggregate": [{"op": "mean", "field": "win_rate", "as": "avg_win_rate"}],
       "groupby": ["country_group"]
+    },
+    {
+      "calculate": "datum.avg_win_rate * 100",
+      "as": "avg_win_rate_percent"
     }
   ],
   "mark": {"type": "bar", "cornerRadiusEnd": 3},
@@ -27,11 +31,11 @@
       "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"]
     },
     "y": {
-      "field": "avg_win_rate",
+      "field": "avg_win_rate_percent",
       "type": "quantitative",
       "title": "Average Win Rate (%)",
-      "axis": {"format": ".1f"},
-      "scale": {"domain": [0, 100]}
+      "scale": {"domain": [0, 100]},
+      "axis": {"format": ".0f"}
     },
     "color": {
       "field": "country_group",
@@ -40,10 +44,7 @@
     },
     "tooltip": [
       {"field": "country_group", "title": "Group"},
-      {"field": "avg_win_rate", "title": "Avg Win Rate", "format": ".1%"}
+      {"field": "avg_win_rate_percent", "title": "Avg Win Rate", "format": ".1f"}
     ]
   }
 }
-
-
-
