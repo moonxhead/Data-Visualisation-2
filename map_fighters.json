@@ -13,61 +13,101 @@
     },
     {
       "data": {
-        "values": [
-          {"country_group": "Australia", "lon": 133.7751, "lat": -25.2744},
-          {"country_group": "USA", "lon": -98.5795, "lat": 39.8283},
-          {"country_group": "Brazil", "lon": -51.9253, "lat": -14.2350},
-          {"country_group": "Japan", "lon": 138.2529, "lat": 36.2048},
-          {"country_group": "Russia", "lon": 105.3188, "lat": 61.5240},
-          {"country_group": "Nigeria", "lon": 8.6753, "lat": 9.0820},
-          {"country_group": "Mexico", "lon": -102.5528, "lat": 23.6345}
-        ]
+        "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
+        "format": {"type": "topojson", "feature": "countries"}
       },
       "transform": [
         {
-          "lookup": "country_group",
+          "lookup": "id",
+          "from": {
+            "data": {
+              "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m-country-names.tsv"
+            },
+            "key": "id",
+            "fields": ["name"]
+          }
+        },
+        {
+          "calculate": "datum.name=='United States of America' ? 'United States' : datum.name=='Russian Federation' ? 'Russia' : datum.name=='Korea, Republic of' ? 'South Korea' : datum.name=='Czech Republic' ? 'Czechia' : datum.name=='Viet Nam' ? 'Vietnam' : datum.name",
+          "as": "name_norm"
+        },
+        {
+          "lookup": "name_norm",
           "from": {
             "data": {"url": "combined_fighter_dataset.csv"},
             "key": "country",
             "fields": ["country"]
           },
-          "as": "match_exact"
+          "as": "m_main"
         },
         {
-          "calculate": "datum.country_group == 'USA' ? 'United States' : datum.country_group",
-          "as": "alias_name"
+          "calculate": "datum.name_norm=='United States' ? 'USA' : null",
+          "as": "alias_usa"
         },
         {
-          "lookup": "alias_name",
+          "lookup": "alias_usa",
           "from": {
             "data": {"url": "combined_fighter_dataset.csv"},
             "key": "country",
             "fields": ["country"]
           },
-          "as": "match_alias"
+          "as": "m_usa"
         },
         {
-          "calculate": "(isDefined(datum.match_exact) ? datum.match_exact.length : 0) + (isDefined(datum.match_alias) ? datum.match_alias.length : 0)",
+          "calculate": "datum.name=='United Kingdom' ? 'England' : null",
+          "as": "alias_uk1"
+        },
+        {
+          "lookup": "alias_uk1",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "m_uk1"
+        },
+        {
+          "calculate": "datum.name=='United Kingdom' ? 'Scotland' : null",
+          "as": "alias_uk2"
+        },
+        {
+          "lookup": "alias_uk2",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "m_uk2"
+        },
+        {
+          "calculate": "datum.name=='United Kingdom' ? 'Wales' : null",
+          "as": "alias_uk3"
+        },
+        {
+          "lookup": "alias_uk3",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "m_uk3"
+        },
+        {
+          "calculate": "length(isDefined(datum.m_main)?datum.m_main:[]) + length(isDefined(datum.m_usa)?datum.m_usa:[]) + length(isDefined(datum.m_uk1)?datum.m_uk1:[]) + length(isDefined(datum.m_uk2)?datum.m_uk2:[]) + length(isDefined(datum.m_uk3)?datum.m_uk3:[])",
           "as": "fighters"
-        }
+        },
+        {"filter": "datum.fighters > 0"}
       ],
-      "mark": {"type": "circle", "opacity": 0.75, "stroke": "#333"},
+      "mark": {"type": "geoshape"},
       "encoding": {
-        "longitude": {"field": "lon", "type": "quantitative"},
-        "latitude": {"field": "lat", "type": "quantitative"},
-        "size": {
+        "color": {
           "field": "fighters",
           "type": "quantitative",
           "title": "Fighters",
-          "scale": {"type": "sqrt", "range": [0, 1800]}
-        },
-        "color": {
-          "field": "country_group",
-          "type": "nominal",
-          "legend": {"title": "Country"}
+          "scale": {"scheme": "blues"}
         },
         "tooltip": [
-          {"field": "country_group", "title": "Country"},
+          {"field": "name", "title": "Country"},
           {"field": "fighters", "title": "Fighters"}
         ]
       }
