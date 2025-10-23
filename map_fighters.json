@@ -9,97 +9,25 @@
         "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
         "format": {"type": "topojson", "feature": "countries"}
       },
-      "mark": {"type": "geoshape", "fill": "#f3f3f3", "stroke": "#cccccc", "strokeWidth": 0.6}
+      "mark": {"type": "geoshape", "fill": "#f0f0f0", "stroke": "#cccccc"}
     },
     {
       "data": {
-        "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
-        "format": {"type": "topojson", "feature": "countries"}
+        "url": "combined_fighter_dataset.csv"
       },
       "transform": [
         {
-          "lookup": "id",
-          "from": {
-            "data": {
-              "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m-country-names.tsv"
-            },
-            "key": "id",
-            "fields": ["name"]
-          }
-        },
-        {
-          "calculate": "datum.name=='United States of America' ? 'United States' : datum.name=='Russian Federation' ? 'Russia' : datum.name=='Korea, Republic of' ? 'South Korea' : datum.name=='Czech Republic' ? 'Czechia' : datum.name=='Viet Nam' ? 'Vietnam' : datum.name",
-          "as": "name_norm"
-        },
-        {
-          "lookup": "name_norm",
-          "from": {
-            "data": {"url": "combined_fighter_dataset.csv"},
-            "key": "country",
-            "fields": ["country"]
-          },
-          "as": "m_main"
-        },
-        {
-          "calculate": "datum.name_norm=='United States' ? 'USA' : null",
-          "as": "alias_usa"
-        },
-        {
-          "lookup": "alias_usa",
-          "from": {
-            "data": {"url": "combined_fighter_dataset.csv"},
-            "key": "country",
-            "fields": ["country"]
-          },
-          "as": "m_usa"
-        },
-        {
-          "calculate": "datum.name=='United Kingdom' ? 'England' : null",
-          "as": "alias_uk1"
-        },
-        {
-          "lookup": "alias_uk1",
-          "from": {
-            "data": {"url": "combined_fighter_dataset.csv"},
-            "key": "country",
-            "fields": ["country"]
-          },
-          "as": "m_uk1"
-        },
-        {
-          "calculate": "datum.name=='United Kingdom' ? 'Scotland' : null",
-          "as": "alias_uk2"
-        },
-        {
-          "lookup": "alias_uk2",
-          "from": {
-            "data": {"url": "combined_fighter_dataset.csv"},
-            "key": "country",
-            "fields": ["country"]
-          },
-          "as": "m_uk2"
-        },
-        {
-          "calculate": "datum.name=='United Kingdom' ? 'Wales' : null",
-          "as": "alias_uk3"
-        },
-        {
-          "lookup": "alias_uk3",
-          "from": {
-            "data": {"url": "combined_fighter_dataset.csv"},
-            "key": "country",
-            "fields": ["country"]
-          },
-          "as": "m_uk3"
-        },
-        {
-          "calculate": "length(isDefined(datum.m_main)?datum.m_main:[]) + length(isDefined(datum.m_usa)?datum.m_usa:[]) + length(isDefined(datum.m_uk1)?datum.m_uk1:[]) + length(isDefined(datum.m_uk2)?datum.m_uk2:[]) + length(isDefined(datum.m_uk3)?datum.m_uk3:[])",
-          "as": "fighters"
-        },
-        {"filter": "datum.fighters > 0"}
+          "aggregate": [{"op": "count", "as": "fighters"}],
+          "groupby": ["country"]
+        }
       ],
       "mark": {"type": "geoshape"},
       "encoding": {
+        "shape": {
+          "field": "country",
+          "type": "nominal",
+          "legend": null
+        },
         "color": {
           "field": "fighters",
           "type": "quantitative",
@@ -107,7 +35,7 @@
           "scale": {"scheme": "blues"}
         },
         "tooltip": [
-          {"field": "name", "title": "Country"},
+          {"field": "country", "title": "Country"},
           {"field": "fighters", "title": "Fighters"}
         ]
       }
