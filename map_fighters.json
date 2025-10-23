@@ -19,23 +19,26 @@
       }
     },
     {
-      "lookup": "name",
+      "calculate": "datum.name == 'United States of America' ? 'United States' : datum.name == 'Russian Federation' ? 'Russia' : datum.name",
+      "as": "name_norm"
+    },
+    {
+      "lookup": "name_norm",
       "from": {
         "data": {"url": "combined_fighter_dataset.csv"},
         "key": "country",
-        "fields": ["country"]
+        "fields": ["name"]
       },
-      "as": ["_match"]
+      "as": "fighters_rows"
     },
+    {"flatten": ["fighters_rows"]},
     {
       "aggregate": [{"op": "count", "as": "fighters"}],
-      "groupby": ["name", "_match"]
+      "groupby": ["id", "name", "name_norm"]
     }
   ],
   "layer": [
-    {
-      "mark": {"type": "geoshape", "fill": "#f3f3f3", "stroke": "#ccc", "strokeWidth": 0.5}
-    },
+    {"mark": {"type": "geoshape", "fill": "#f3f3f3", "stroke": "#ccc", "strokeWidth": 0.5}},
     {
       "mark": {"type": "geoshape"},
       "encoding": {
