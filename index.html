@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>UFC Fighter Performance — Australia vs The World</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link rel="stylesheet" href="https://unpkg.com/purecss@2.2.0/build/pure-min.css" />
 <style>
   body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;margin:0;color:#111}
@@ -20,7 +19,6 @@
 <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-<script src="main.js"></script>
 </head>
 <body>
 <header>
@@ -30,25 +28,25 @@
 
 <div class="container">
 
-  <section id="s1">
+  <section>
     <h2>1) Fighters by Country (Map)</h2>
     <div id="map" class="chart"></div>
     <p class="note">Text analysis</p>
   </section>
 
-  <section id="s2">
+  <section>
     <h2>2) Average Win Rate by Country Group</h2>
-    <div id="winrate" class="chart"></div>
+    <div id="barchart" class="chart"></div>
     <p class="note">Text analysis</p>
   </section>
 
-  <section id="s3">
+  <section>
     <h2>3) Method of Victory Distribution</h2>
-    <div id="victory" class="chart"></div>
+    <div id="stacked" class="chart"></div>
     <p class="note">Text analysis</p>
   </section>
 
-  <section id="s4">
+  <section>
     <h2>4) Striking vs Takedowns</h2>
     <div id="scatter" class="chart"></div>
     <p class="note">Text analysis</p>
@@ -60,12 +58,6 @@
   <small>Data source: combined_fighter_dataset.csv • Built with Vega-Lite</small>
 </footer>
 
-<script>
-  vegaEmbed("#map", "map_fighters.json", {actions:false});
-  vegaEmbed("#winrate", "bar_winrate.json", {actions:false});
-  vegaEmbed("#victory", "stack_victory_method.json", {actions:false});
-  vegaEmbed("#scatter", "scatter_strikes_takedowns.json", {actions:false});
-</script>
+<script src="main.js"></script>
 </body>
 </html>
-
