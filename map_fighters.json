@@ -7,39 +7,53 @@
     "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
     "format": {"type": "topojson", "feature": "countries"}
   },
-  "transform": [
-    {
-      "lookup": "id",
-      "from": {
-        "data": {
-          "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m-country-names.tsv"
-        },
-        "key": "id",
-        "fields": ["name"]
-      }
-    },
-    {
-      "calculate": "datum.name == 'United States of America' ? 'United States' : datum.name == 'Russian Federation' ? 'Russia' : datum.name",
-      "as": "name_norm"
-    },
-    {
-      "lookup": "name_norm",
-      "from": {
-        "data": {"url": "combined_fighter_dataset.csv"},
-        "key": "country",
-        "fields": ["name"]
-      },
-      "as": "fighters_rows"
-    },
-    {"flatten": ["fighters_rows"]},
-    {
-      "aggregate": [{"op": "count", "as": "fighters"}],
-      "groupby": ["id", "name", "name_norm"]
-    }
-  ],
   "layer": [
-    {"mark": {"type": "geoshape", "fill": "#f3f3f3", "stroke": "#ccc", "strokeWidth": 0.5}},
     {
+      "mark": {"type": "geoshape", "fill": "#f3f3f3", "stroke": "#ccc", "strokeWidth": 0.5}
+    },
+    {
+      "transform": [
+        {
+          "lookup": "id",
+          "from": {
+            "data": {
+              "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m-country-names.tsv"
+            },
+            "key": "id",
+            "fields": ["name"]
+          }
+        },
+        {
+          "calculate": "datum.name == 'United States of America' ? 'United States' : datum.name == 'Russian Federation' ? 'Russia' : datum.name",
+          "as": "name_norm"
+        },
+        {
+          "lookup": "name_norm",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "match_main"
+        },
+        {
+          "calculate": "datum.name_norm == 'United States' ? 'USA' : null",
+          "as": "usa_alias"
+        },
+        {
+          "lookup": "usa_alias",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "match_alias"
+        },
+        {
+          "calculate": "(isDefined(datum.match_main) ? length(datum.match_main) : 0) + (isDefined(datum.match_alias) ? length(datum.match_alias) : 0)",
+          "as": "fighters"
+        }
+      ],
       "mark": {"type": "geoshape"},
       "encoding": {
         "color": {
