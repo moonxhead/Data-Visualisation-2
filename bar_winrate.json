@@ -28,10 +28,10 @@
     },
     "y": {
       "field": "Average Win Rate",
-    "type": "quantitative",
-    "title": "Average Win Rate (%)",
-    "axis": {"format": ".1f"},
-    "scale": {"domain": [0, 100]}
+      "type": "quantitative",
+      "title": "Average Win Rate (%)",
+      "axis": {"format": ".1f"},
+      "scale": {"domain": [0, 100]}
     },
     "color": {
       "field": "country_group",
@@ -44,4 +44,5 @@
     ]
   }
 }
+
 
