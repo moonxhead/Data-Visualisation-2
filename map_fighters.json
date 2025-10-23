@@ -1,0 +1,55 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 420,
+  "projection": {"type": "equalEarth"},
+  "data": {
+    "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
+    "format": {"type": "topojson", "feature": "countries"}
+  },
+  "transform": [
+    {
+      "lookup": "id",
+      "from": {
+        "data": {
+          "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m-country-names.tsv"
+        },
+        "key": "id",
+        "fields": ["name"]
+      }
+    },
+    {
+      "lookup": "name",
+      "from": {
+        "data": {"url": "combined_fighter_dataset.csv"},
+        "key": "country",
+        "fields": ["country"]
+      },
+      "as": ["_match"]
+    },
+    {
+      "aggregate": [{"op": "count", "as": "fighters"}],
+      "groupby": ["name", "_match"]
+    }
+  ],
+  "layer": [
+    {
+      "mark": {"type": "geoshape", "fill": "#f3f3f3", "stroke": "#ccc", "strokeWidth": 0.5}
+    },
+    {
+      "mark": {"type": "geoshape"},
+      "encoding": {
+        "color": {
+          "field": "fighters",
+          "type": "quantitative",
+          "title": "Fighters",
+          "scale": {"scheme": "blues"}
+        },
+        "tooltip": [
+          {"field": "name", "title": "Country"},
+          {"field": "fighters", "title": "Fighters"}
+        ]
+      }
+    }
+  ]
+}

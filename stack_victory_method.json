@@ -1,0 +1,52 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 420,
+  "data": {"url": "combined_fighter_dataset.csv"},
+  "transform": [
+    {
+      "calculate": "indexof(['Australia','United States','Brazil','Japan','Russia','Nigeria','Mexico'], datum.country) >= 0 ? (datum.country=='United States' ? 'USA' : datum.country) : 'Rest of World'",
+      "as": "country_group"
+    },
+    {
+      "fold": ["wins_ko","wins_submission","wins_decision"],
+      "as": ["method","count"]
+    },
+    {
+      "calculate": "datum.method == 'wins_ko' ? 'KO/TKO' : datum.method == 'wins_submission' ? 'Submission' : 'Decision'",
+      "as": "method_label"
+    },
+    {
+      "aggregate": [{"op": "sum", "field": "count", "as": "total"}],
+      "groupby": ["country_group","method_label"]
+    }
+  ],
+  "mark": {"type": "bar"},
+  "encoding": {
+    "x": {
+      "field": "country_group",
+      "type": "nominal",
+      "title": "Country Group",
+      "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"]
+    },
+    "y": {
+      "field": "total",
+      "type": "quantitative",
+      "stack": "normalize",
+      "title": "Share of Wins"
+    },
+    "color": {
+      "field": "method_label",
+      "type": "nominal",
+      "title": "Method",
+      "sort": ["KO/TKO","Submission","Decision"]
+    },
+    "tooltip": [
+      {"field": "country_group", "title": "Group"},
+      {"field": "method_label", "title": "Method"},
+      {"field": "total", "title": "Wins"},
+      {"aggregate": "sum", "field": "total", "title": "Total Group Wins"},
+      {"field": "method_label", "title": "Share", "type": "nominal"}
+    ]
+  }
+}
