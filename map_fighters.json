@@ -1,9 +1,11 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Number of UFC Fighters by Country",
-  "width": 800,
+  "title": { "text": "Number of UFC Fighters by Country", "anchor": "middle", "offset": 10 },
+  "width": "container",
   "height": 420,
   "projection": { "type": "equalEarth" },
+  "autosize": { "type": "fit", "contains": "padding" },
+  "view": { "stroke": null },
 
   "data": {
     "url": "https://raw.githubusercontent.com/FIT3179/Vega-Lite/main/3_choropleth_map/js/ne_110m_admin_0_countries.topojson",
@@ -29,7 +31,8 @@
       "field": "fighters",
       "type": "quantitative",
       "title": "Fighters",
-      "scale": { "scheme": "blues" }
+      "scale": { "scheme": "blues" },
+      "legend": { "orient": "bottom", "direction": "horizontal" }
     },
     "tooltip": [
       { "field": "properties.NAME", "title": "Country" },
