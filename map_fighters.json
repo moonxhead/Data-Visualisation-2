@@ -14,20 +14,7 @@
     {
       "lookup": "properties.NAME",
       "from": {
-        "data": {
-          "url": "combined_fighter_dataset.csv",
-          "format": { "type": "csv" }
-        },
-        "transform": [
-          {
-            "calculate": "toLower(datum.country) == 'usa' ? 'United States of America' : datum.country",
-            "as": "CountryKey"
-          },
-          {
-            "aggregate": [{ "op": "count", "as": "fighters" }],
-            "groupby": ["CountryKey"]
-          }
-        ],
+        "data": { "url": "fighters_by_country.csv" },
         "key": "CountryKey",
         "fields": ["fighters"]
       },
@@ -35,7 +22,7 @@
     }
   ],
 
-  "mark": { "type": "geoshape" },
+  "mark": { "type": "geoshape", "stroke": "white", "strokeWidth": 0.5 },
 
   "encoding": {
     "color": {
