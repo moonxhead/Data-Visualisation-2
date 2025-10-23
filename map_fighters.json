@@ -3,58 +3,57 @@
   "title": "Number of UFC Fighters by Country",
   "width": "container",
   "height": 460,
-  "projection": { "type": "equalEarth" },
+  "projection": {"type": "equalEarth"},
   "layer": [
     {
       "data": {
-        "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
-        "format": { "type": "topojson", "feature": "countries" }
+        "url": "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"
       },
-      "mark": { "type": "geoshape", "fill": "#efefef", "stroke": "#ffffff", "strokeWidth": 0.5 }
+      "mark": {"type": "geoshape", "fill": "#efefef", "stroke": "#ffffff", "strokeWidth": 0.5}
     },
     {
-      "data": { "url": "combined_fighter_dataset.csv" },
+      "data": {
+        "url": "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson"
+      },
       "transform": [
         {
-          "calculate": "toLower(datum.country)=='usa' ? 'United States of America' : toLower(datum.country)=='united states' ? 'United States of America' : toLower(datum.country)=='uk' ? 'United Kingdom' : datum.country=='England' || datum.country=='Scotland' || datum.country=='Wales' || datum.country=='Northern Ireland' ? 'United Kingdom' : datum.country=='Russia' ? 'Russian Federation' : datum.country=='South Korea' ? 'Korea, Republic of' : datum.country",
-          "as": "country_norm"
+          "calculate": "datum.properties.name == 'United States of America' ? 'United States' : datum.properties.name == 'Russian Federation' ? 'Russia' : datum.properties.name == 'Korea, Republic of' ? 'South Korea' : datum.properties.name == 'Czech Republic' ? 'Czechia' : datum.properties.name == 'Viet Nam' ? 'Vietnam' : datum.properties.name == 'Lao PDR' ? 'Laos' : datum.properties.name",
+          "as": "name_norm"
         },
-        { "aggregate": [{ "op": "count", "as": "fighters" }], "groupby": ["country_norm"] },
         {
-          "lookup": "country_norm",
-          "from": {
-            "data": { "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m-country-names.tsv" },
-            "key": "name",
-            "fields": ["id"]
-          },
-          "as": ["geo_id"]
-        },
-        { "filter": "isValid(datum.geo_id)" },
-        {
-          "lookup": "geo_id",
+          "lookup": "name_norm",
           "from": {
             "data": {
-              "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
-              "format": { "type": "topojson", "feature": "countries" }
+              "url": "combined_fighter_dataset.csv"
             },
-            "key": "id",
-            "fields": ["geometry"]
+            "transform": [
+              {
+                "calculate": "toLower(datum.country) == 'usa' ? 'United States' : toLower(datum.country) == 'united states' ? 'United States' : toLower(datum.country) == 'united states of america' ? 'United States' : datum.country in ['England','Scotland','Wales','Northern Ireland','UK'] ? 'United Kingdom' : datum.country",
+                "as": "country_norm"
+              },
+              {
+                "aggregate": [{"op": "count", "as": "fighters"}],
+                "groupby": ["country_norm"]
+              }
+            ],
+            "key": "country_norm",
+            "fields": ["fighters"]
           },
-          "as": ["geo"]
+          "as": ["fighters"]
         }
       ],
-      "mark": { "type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.5 },
+      "mark": {"type": "geoshape", "stroke": "#ffffff", "strokeWidth": 0.5},
       "encoding": {
-        "shape": { "field": "geo", "type": "geojson" },
+        "shape": {"field": "geometry", "type": "geojson"},
         "color": {
           "field": "fighters",
           "type": "quantitative",
           "title": "Fighters",
-          "scale": { "scheme": "blues" }
+          "scale": {"scheme": "blues"}
         },
         "tooltip": [
-          { "field": "country_norm", "title": "Country" },
-          { "field": "fighters", "title": "Fighters" }
+          {"field": "name_norm", "title": "Country"},
+          {"field": "fighters", "title": "Fighters"}
         ]
       }
     }
