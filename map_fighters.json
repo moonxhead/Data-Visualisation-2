@@ -12,55 +12,91 @@
       "mark": {"type": "geoshape", "fill": "#f3f3f3", "stroke": "#ccc", "strokeWidth": 0.5}
     },
     {
-      "data": {"url": "combined_fighter_dataset.csv"},
+      "data": {
+        "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
+        "format": {"type": "topojson", "feature": "countries"}
+      },
       "transform": [
         {
-          "calculate": "datum.country == 'USA' ? 'United States of America' : toLower(datum.country) == 'united states' ? 'United States of America' : toLower(datum.country) == 'united states of america' ? 'United States of America' : datum.country == 'Russian Federation' ? 'Russia' : datum.country",
-          "as": "country_norm"
-        },
-        {
-          "aggregate": [{"op": "count", "as": "fighters"}],
-          "groupby": ["country_norm"]
-        },
-        {
-          "lookup": "country_norm",
+          "lookup": "id",
           "from": {
             "data": {
               "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m-country-names.tsv"
             },
-            "key": "name",
-            "fields": ["id"]
-          },
-          "as": "geo_id"
-        },
-        {"filter": "isValid(datum.geo_id)"},
-        {
-          "lookup": "geo_id",
-          "from": {
-            "data": {
-              "url": "https://cdn.jsdelivr.net/npm/vega-datasets@2.12.1/data/world-110m.json",
-              "format": {"type": "topojson", "feature": "countries"}
-            },
             "key": "id",
-            "fields": ["geometry"]
+            "fields": ["name"]
+          }
+        },
+        {
+          "calculate": "datum.name=='United States of America' ? 'United States' : datum.name=='Russian Federation' ? 'Russia' : datum.name=='Korea, Republic of' ? 'South Korea' : datum.name==\"Korea, Democratic People's Republic of\" ? 'North Korea' : datum.name=='United Kingdom' ? 'United Kingdom' : datum.name=='Czech Republic' ? 'Czechia' : datum.name=='Viet Nam' ? 'Vietnam' : datum.name",
+          "as": "name_norm"
+        },
+        {
+          "lookup": "name_norm",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
           },
-          "as": "shape"
+          "as": "m1"
+        },
+        {
+          "calculate": "datum.name=='United States of America' ? 'USA' : null",
+          "as": "alias_usa"
+        },
+        {
+          "lookup": "alias_usa",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "m2"
+        },
+        {
+          "calculate": "datum.name=='United Kingdom' ? 'England' : null",
+          "as": "alias_uk1"
+        },
+        {
+          "lookup": "alias_uk1",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "m3"
+        },
+        {
+          "calculate": "datum.name=='United Kingdom' ? 'Scotland' : null",
+          "as": "alias_uk2"
+        },
+        {
+          "lookup": "alias_uk2",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "m4"
+        },
+        {
+          "calculate": "datum.name=='United Kingdom' ? 'Wales' : null",
+          "as": "alias_uk3"
+        },
+        {
+          "lookup": "alias_uk3",
+          "from": {
+            "data": {"url": "combined_fighter_dataset.csv"},
+            "key": "country",
+            "fields": ["country"]
+          },
+          "as": "m5"
+        },
+        {
+          "calculate": "length(isDefined(datum.m1)?datum.m1:[]) + length(isDefined(datum.m2)?datum.m2:[]) + length(isDefined(datum.m3)?datum.m3:[]) + length(isDefined(datum.m4)?datum.m4:[]) + length(isDefined(datum.m5)?datum.m5:[])",
+          "as": "fighters"
         }
       ],
       "mark": {"type": "geoshape"},
       "encoding": {
-        "shape": {"field": "shape", "type": "geojson"},
         "color": {
-          "field": "fighters",
-          "type": "quantitative",
-          "title": "Fighters",
-          "scale": {"scheme": "blues"}
-        },
-        "tooltip": [
-          {"field": "country_norm", "title": "Country"},
-          {"field": "fighters", "title": "Fighters"}
-        ]
-      }
-    }
-  ]
-}
