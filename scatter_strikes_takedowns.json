@@ -2,22 +2,39 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": "container",
   "height": 420,
-  "data": {"url": "combined_fighter_dataset.csv"},
+  "data": { "url": "combined_fighter_dataset.csv" },
+
   "transform": [
     {
       "calculate": "indexof(['Australia','United States','Brazil','Japan','Russia','Nigeria','Mexico'], datum.country) >= 0 ? (datum.country=='United States' ? 'USA' : datum.country) : 'Rest of World'",
       "as": "country_group"
+    },
+    { "filter": "isValid(datum.significant_strikes_landed_per_minute) && isValid(datum.average_takedowns_landed_per_15_minutes)" },
+
+    {
+      "aggregate": [
+        { "op": "mean",  "field": "significant_strikes_landed_per_minute",       "as": "avg_strikes" },
+        { "op": "mean",  "field": "average_takedowns_landed_per_15_minutes",     "as": "avg_tds"     }
+      ],
+      "groupby": ["country_group"]
     }
   ],
-  "mark": {"type": "point", "filled": true, "opacity": 0.7, "size": 80},
+
+  "mark": { 
+    "type": "point", 
+    "filled": true, 
+    "opacity": 0.9, 
+    "size": 400
+  },
+
   "encoding": {
     "x": {
-      "field": "significant_strikes_landed_per_minute",
+      "field": "avg_strikes",
       "type": "quantitative",
       "title": "Significant Strikes Landed per Minute"
     },
     "y": {
-      "field": "average_takedowns_landed_per_15_minutes",
+      "field": "avg_tds",
       "type": "quantitative",
       "title": "Average Takedowns Landed per 15 Minutes"
     },
@@ -28,13 +45,9 @@
       "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"]
     },
     "tooltip": [
-      {"field": "name", "title": "Fighter"},
-      {"field": "country_group", "title": "Group"},
-      {"field": "weight_class", "title": "Weight Class"},
-      {"field": "significant_strikes_landed_per_minute", "title": "Sig Strikes / min", "format": ".2f"},
-      {"field": "average_takedowns_landed_per_15_minutes", "title": "TDs / 15m", "format": ".2f"},
-      {"field": "wins", "title": "Wins"},
-      {"field": "losses", "title": "Losses"}
+      { "field": "country_group", "title": "Group" },
+      { "field": "avg_strikes",   "title": "Avg Sig Strikes / min", "format": ".2f" },
+      { "field": "avg_tds",       "title": "Avg TDs / 15m",         "format": ".2f" }
     ]
   }
 }
