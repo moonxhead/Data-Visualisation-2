@@ -26,27 +26,39 @@
     "x": {
       "field": "country_group",
       "type": "nominal",
-      "title": "Country Group",
-      "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"]
+      "title": "",
+      "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"],
+      "axis": {
+        "labelAngle": 0,
+        "labelFontSize": 14,
+        "titleFontSize": 16
+      }
     },
     "y": {
       "field": "total",
       "type": "quantitative",
       "stack": "normalize",
-      "title": "Share of Wins"
+      "title": "Share of Wins",
+      "axis": {
+        "labelFontSize": 14,
+        "titleFontSize": 16,
+        "format": ".0%"
+      }
     },
     "color": {
       "field": "method_label",
       "type": "nominal",
       "title": "Method",
-      "sort": ["KO/TKO","Submission","Decision"]
+      "sort": ["KO/TKO","Submission","Decision"],
+      "scale": {
+        "domain": ["KO/TKO","Submission","Decision"],
+        "range": ["#ffd480","#ffb200","#cc8400"]
+      }
     },
     "tooltip": [
       {"field": "country_group", "title": "Group"},
       {"field": "method_label", "title": "Method"},
-      {"field": "total", "title": "Wins"},
-      {"aggregate": "sum", "field": "total", "title": "Total Group Wins"},
-      {"field": "method_label", "title": "Share", "type": "nominal"}
+      {"field": "total", "title": "Wins"}
     ]
   }
 }
