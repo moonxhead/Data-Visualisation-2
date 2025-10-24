@@ -29,7 +29,7 @@
       "field": "fighters",
       "type": "quantitative",
       "title": "Fighters",
-      "scale": { "scheme": "blues" }
+      "scale": { "scheme": "purples" }
     },
     "tooltip": [
       { "field": "properties.NAME", "title": "Country" },
@@ -37,3 +37,4 @@
     ]
   }
 }
+
