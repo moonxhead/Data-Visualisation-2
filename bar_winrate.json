@@ -2,34 +2,8 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": "container",
   "height": 420,
-  "data": { "url": "combined_fighter_dataset.csv" },
-
-  "transform": [
-    {
-      "calculate": "toLower(datum.country)=='australia' ? 'Australia' : (toLower(datum.country)=='usa' || toLower(datum.country)=='united states' || toLower(datum.country)=='united states of america') ? 'USA' : (toLower(datum.country)=='brazil' ? 'Brazil' : (toLower(datum.country)=='japan' ? 'Japan' : (toLower(datum.country)=='russia' ? 'Russia' : (toLower(datum.country)=='nigeria' ? 'Nigeria' : (toLower(datum.country)=='mexico' ? 'Mexico' : 'Rest of World')))))",
-      "as": "country_group"
-    },
-    { "calculate": "toNumber(datum.wins)",   "as": "w" },
-    { "calculate": "toNumber(datum.losses)", "as": "l" },
-    { "calculate": "toNumber(datum.draws)",  "as": "d" },
-    { "filter": "(datum.w + datum.l + datum.d) > 0" },
-
-    {
-      "aggregate": [
-        { "op": "sum", "field": "w", "as": "W" },
-        { "op": "sum", "field": "l", "as": "L" },
-        { "op": "sum", "field": "d", "as": "D" }
-      ],
-      "groupby": ["country_group"]
-    },
-    {
-      "calculate": "datum.W / (datum.W + datum.L + datum.D)",
-      "as": "avg_win_rate"
-    }
-  ],
-
+  "data": { "url": "country_winrates.csv" },
   "mark": { "type": "bar", "cornerRadiusEnd": 3 },
-
   "encoding": {
     "x": {
       "field": "country_group",
