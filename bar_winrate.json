@@ -8,6 +8,7 @@
     "x": {
       "field": "country_group",
       "type": "nominal",
+      "title": "",
       "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"],
       "axis": {
         "labelAngle": 0,
@@ -37,4 +38,5 @@
     ]
   }
 }
+
 
