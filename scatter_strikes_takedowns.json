@@ -10,11 +10,10 @@
       "as": "country_group"
     },
     { "filter": "isValid(datum.significant_strikes_landed_per_minute) && isValid(datum.average_takedowns_landed_per_15_minutes)" },
-
     {
       "aggregate": [
-        { "op": "mean",  "field": "significant_strikes_landed_per_minute",       "as": "avg_strikes" },
-        { "op": "mean",  "field": "average_takedowns_landed_per_15_minutes",     "as": "avg_tds"     }
+        { "op": "mean",  "field": "significant_strikes_landed_per_minute", "as": "avg_strikes" },
+        { "op": "mean",  "field": "average_takedowns_landed_per_15_minutes", "as": "avg_tds" }
       ],
       "groupby": ["country_group"]
     }
@@ -31,23 +30,30 @@
     "x": {
       "field": "avg_strikes",
       "type": "quantitative",
-      "title": "Significant Strikes Landed per Minute"
+      "title": "Significant Strikes Landed per Minute",
+      "axis": { "labelFontSize": 14, "titleFontSize": 16 }
     },
     "y": {
       "field": "avg_tds",
       "type": "quantitative",
-      "title": "Average Takedowns Landed per 15 Minutes"
+      "title": "Average Takedowns Landed per 15 Minutes",
+      "axis": { "labelFontSize": 14, "titleFontSize": 16 }
     },
     "color": {
       "field": "country_group",
       "type": "nominal",
       "title": "Country Group",
-      "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"]
+      "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"],
+      "scale": {
+        "domain": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"],
+        "range": ["#ffb200", "#ffd480", "#ffd480", "#ffd480", "#ffd480", "#ffd480", "#ffd480", "#cc8400"]
+      },
+      "legend": null
     },
     "tooltip": [
       { "field": "country_group", "title": "Group" },
       { "field": "avg_strikes",   "title": "Avg Sig Strikes / min", "format": ".2f" },
-      { "field": "avg_tds",       "title": "Avg TDs / 15m",         "format": ".2f" }
+      { "field": "avg_tds",       "title": "Avg TDs / 15m", "format": ".2f" }
     ]
   }
 }
