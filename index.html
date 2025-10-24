@@ -4,22 +4,72 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>UFC Fighter Performance — Australia vs The World</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="https://unpkg.com/purecss@2.2.0/build/pure-min.css" />
 <style>
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;margin:0;color:#111}
-  header{padding:32px 16px;text-align:center;border-bottom:1px solid #eee}
-  h1{margin:0 0 8px 0;font-size:28px}
-  .container{max-width:1100px;margin:0 auto;padding:24px 16px}
-  section{margin:32px 0;padding-bottom:24px;border-bottom:1px solid #f1f1f1}
-  .chart{width:100%;min-height:420px}
-  h2{margin:0 0 8px 0;font-size:24px}
-  p.note{margin:9px 0 0 0;color:#444}
-  footer{padding:24px 16px;color:#666;text-align:center}
+  body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    color: #111;
+  }
+
+  header {
+    padding: 32px 16px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    margin: 0 0 8px 0;
+    font-size: 48px;
+    letter-spacing: 1px;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  section {
+    margin: 32px 0;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+
+  .chart {
+    width: 100%;
+    min-height: 420px;
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    margin: 0 0 8px 0;
+    font-size: 30px;
+    letter-spacing: 0.5px;
+  }
+
+  p.note {
+    margin: 9px 0 0 0;
+    color: #444;
+    line-height: 1.5;
+  }
+
+  footer {
+    padding: 24px 16px;
+    color: #666;
+    text-align: center;
+  }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
 <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
+
 <body>
 <header>
   <h1>UFC Fighter Performance — Australia vs The World</h1>
@@ -31,7 +81,13 @@
   <section>
     <h2>Number of UFC Fighters by Country</h2>
     <div id="map" class="chart"></div>
-    <p class="note">Australia has <b>49 UFC fighters</b>, which is relatively high compared to most other countries. However, when compared to global powerhouses like the <b>United States (2029 fighters)</b> and <b>Brazil (345 fighters)</b>, Australia still has a long way to go. This gap is largely due to both <b><span style="color:#ffc000;">Australia’s smaller population size and lower overall interest in MMA and the UFC</span></b> compared to nations where the sport is deeply rooted in the culture.</p>
+    <p class="note">
+      Australia has <b>49 UFC fighters</b>, which is relatively high compared to many other countries.
+      However, when compared to global powerhouses like the <b>United States (2029 fighters)</b> and
+      <b>Brazil (345 fighters)</b>, Australia still has a long way to go.
+      This gap is largely due to both <b><span style="color:#ffc000;">Australia’s smaller population size and lower overall interest in MMA and the UFC</span></b>
+      compared to nations where the sport is deeply rooted in the culture.
+    </p>
   </section>
 
   <section>
@@ -61,7 +117,3 @@
 <script src="main.js"></script>
 </body>
 </html>
-
-
-
-
