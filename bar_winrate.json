@@ -8,7 +8,6 @@
     "x": {
       "field": "country_group",
       "type": "nominal",
-      "title": "Country Group",
       "sort": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"],
       "axis": {
         "labelAngle": 0,
@@ -33,8 +32,9 @@
       }
     },
     "tooltip": [
-      { "field": "country_group", "title": "Group" },
+      { "field": "country_group", "title": "Country" },
       { "field": "avg_win_rate", "title": "Avg Win Rate", "format": ".1%" }
     ]
   }
 }
+
