@@ -48,7 +48,12 @@
         "domain": ["Australia","USA","Brazil","Japan","Russia","Nigeria","Mexico","Rest of World"],
         "range": ["#ffb200", "#ffd480", "#ffd480", "#ffd480", "#ffd480", "#ffd480", "#ffd480", "#cc8400"]
       },
-      "legend": null
+      "legend": {
+        "titleFontSize": 14,
+        "labelFontSize": 13,
+        "orient": "right",
+        "padding": 10
+      }
     },
     "tooltip": [
       { "field": "country_group", "title": "Group" },
